@@ -1,14 +1,10 @@
-USING: kernel io.files io.pathnames io.encodings.utf8 splitting
-math sequences math.parser grouping ;
+USING: kernel math sequences math.parser grouping
+aoc.shared ;
 IN: aoc.day01
 
-: parse-numbers ( path -- seq )
-  utf8 file-contents "\n" split
-  [ string>number ] map [ >boolean ] filter
-;
 
 : load-input ( -- seq )
-  "vocab:aoc/day01/input.txt" parse-numbers
+  INPUT-FILE read-lines [ string>number ] map
 ;
 
 : count-increases ( seq -- incr )
