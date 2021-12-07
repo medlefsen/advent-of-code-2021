@@ -7,19 +7,11 @@ TUPLE: counts zero one ;
 : extract-counts ( pos-counts -- zero one ) 
   [ zero>> ] [ one>> ] bi ;
 
-MEMO: inputs ( -- seq ) INPUT-FILE read-lines ;
-
-: input-rows ( -- rows )
-  inputs [ [ CHAR: 1 = ] [ ] map-as ] map
-;
-
-: num-cols ( -- size ) input-rows first length ;
+: num-cols ( rows -- size ) first length ;
 
 :: col ( rows col -- seq )
-rows [ col swap nth ] map
+  rows [| row | col row nth ] map
 ;
-
-MEMO: input-cols ( -- cols ) input-rows flip ;
 
 : count-col ( col -- counts ) 
   <counts>
@@ -34,12 +26,13 @@ MEMO: input-cols ( -- cols ) input-rows flip ;
 ;
 
 :: iterative-apply ( rows quot: ( counts -- ? ) -- row )
-num-cols <iota> rows [| rows i |
-  rows length 1 >
-  [ rows i quot filter-rows ]
-  [ rows ]
-  if
-] reduce
+  rows num-cols <iota> rows
+  [| rows i |
+    rows length 1 >
+    [ rows i quot filter-rows ]
+    [ rows ]
+    if
+  ] reduce
 ;
 
 ! zeros > ones -> f, zeroes < ones -> t, zeroes = ones -> t
@@ -52,24 +45,24 @@ num-cols <iota> rows [| rows i |
   ?{ } map-as reverse bit-array>integer
 ; inline
  
-: gamma ( -- result )
-  input-cols [ count-col most-common ] map-as-int
+: gamma ( input -- result )
+  flip [ count-col most-common ] map-as-int
 ;
 
-: epsilon ( -- result ) 
-  input-cols [ count-col least-common ] map-as-int
+: epsilon ( input -- result ) 
+  flip [ count-col least-common ] map-as-int
 ;
 
-: oxygen-rating ( -- result )
-  input-rows [ most-common ] iterative-apply
+: oxygen-rating ( input -- result )
+  [ most-common ] iterative-apply
   first [ ] map-as-int
 ;
 
-: scrubber-rating ( -- result )
-  input-rows [ least-common ] iterative-apply
+: scrubber-rating ( input -- result )
+  [ least-common ] iterative-apply
   first [ ] map-as-int
 ;
 
-: part1 ( -- result ) gamma epsilon * ;
-
-: part2 ( -- result ) oxygen-rating scrubber-rating * ;
+INPUT: [ [ CHAR: 1 = ] [ ] map-as ] map ;
+PART1: [ gamma ] [ epsilon ] bi@ * ;
+PART2: [ oxygen-rating ] [ scrubber-rating ] bi@ * ;

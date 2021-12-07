@@ -9,10 +9,6 @@ TUPLE: position horiz depth aim ;
 : <position> ( -- position ) 0 0 0 position boa ;
 : mul-pos ( position -- mul ) [ horiz>> ] [ depth>> ] bi * ;
 
-MEMO: commands ( -- seq ) INPUT-FILE read-lines 
- [ " " split first2 string>number <command> ] map
-;
-
 :: apply-command ( position command -- position )
   command distance>>
   position  
@@ -39,10 +35,6 @@ MEMO: commands ( -- seq ) INPUT-FILE read-lines
   } case
 ;
 
-: part1 ( -- result )
-  commands <position> [ apply-command ] reduce mul-pos
-;
-
-: part2 ( -- result )
-  commands <position> [ apply-command-2 ] reduce mul-pos
-;
+INPUT: [ " " split first2 string>number <command> ] map ;
+PART1: <position> [ apply-command ] reduce mul-pos ;
+PART2: <position> [ apply-command-2 ] reduce mul-pos ;

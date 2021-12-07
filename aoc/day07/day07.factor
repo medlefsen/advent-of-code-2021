@@ -2,13 +2,6 @@ USING: kernel locals aoc.shared splitting math.parser sequences
 memoize math.statistics math math.ranges ;
 IN: aoc.day07
 
-: read-crabs ( path -- seq ) 
-  read-lines first "," split [ string>number ] map
-;
-
-MEMO: test-crabs ( -- seq ) TEST-FILE read-crabs ;
-MEMO: input-crabs ( -- seq ) INPUT-FILE read-crabs ;
-
 :: linear-alignment-fuel ( pos crabs -- n )
   crabs [ pos - abs ] map sum
 ;
@@ -35,5 +28,6 @@ MEMO: input-crabs ( -- seq ) INPUT-FILE read-crabs ;
  exp-alignment-options minmax drop
 ;
 
-: part1 ( -- n ) input-crabs lowest-linear-alignment-fuel ;
-: part2 ( -- n ) input-crabs lowest-exp-alignment-fuel ;
+INPUT: first "," split [ string>number ] map ;
+PART1: lowest-linear-alignment-fuel ;
+PART2: lowest-exp-alignment-fuel ;

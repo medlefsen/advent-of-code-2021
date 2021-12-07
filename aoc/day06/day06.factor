@@ -5,12 +5,6 @@ IN: aoc.day06
 : <fishes> ( seq -- fishes )
   V{ } clone [ over inc-at ] reduce 
 ;
-: read-fish ( path -- seq )
-  read-lines first "," split [ string>number ] map <fishes>
-;
-
-MEMO: test-fish ( -- fishes ) TEST-FILE read-fish ;
-MEMO: input-fish ( -- fishes ) INPUT-FILE read-fish ;
 
 :: process-fishes ( fishes -- fishes )
   fishes [| age num |
@@ -27,5 +21,8 @@ MEMO: input-fish ( -- fishes ) INPUT-FILE read-fish ;
   [ process-fishes ] times fishes-size
 ;
 
-: part1 ( -- n ) input-fish 80 count-after-days ;
-: part2 ( -- n ) input-fish 256 count-after-days ;
+INPUT: 
+  first "," split [ string>number ] map <fishes>
+;
+PART1: 80 count-after-days ;
+PART2: 256 count-after-days ;

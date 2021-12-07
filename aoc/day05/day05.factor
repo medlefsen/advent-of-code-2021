@@ -3,22 +3,12 @@ accessors sequences memoize regexp arrays math.vectors io
 math.order combinators assocs ;
 IN: aoc.day05
 
-
 : <pos> ( x y -- pos ) 2array ;
 :: x>> ( pos -- x ) 0 pos nth ;
 :: y>> ( pos -- y ) 1 pos nth ;
 
 TUPLE: line start end ;
 C: <line> line
-
-: parse-line ( str -- line )
-  " -> " split1
-  [ "," split1 [ string>number ] bi@ <pos> ] bi@
-  <line>
-;
-
-: input-rows ( -- seq ) INPUT-FILE read-lines ;
-MEMO: input-lines ( -- lines ) input-rows [ parse-line ] map ;
 
 :: next-num ( n e -- n )
   n e <=> { 
@@ -60,10 +50,10 @@ MEMO: input-lines ( -- lines ) input-rows [ parse-line ] map ;
   ] filter
 ;
 
-: part1 ( -- result )
-  input-lines without-diag count-multiple-overlaps
-;
-
-: part2 ( -- result ) input-lines count-multiple-overlaps ;
-
-
+INPUT: [
+  " -> " split1
+  [ "," split1 [ string>number ] bi@ <pos> ] bi@
+  <line>
+] map ;
+PART1: without-diag count-multiple-overlaps ;
+PART2: count-multiple-overlaps ;

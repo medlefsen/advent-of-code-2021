@@ -8,16 +8,6 @@ TUPLE: board-pos value marked ;
 TUPLE: bingo inputs boards ;
 C: <bingo> bingo
 
-: input-rows ( -- seq ) INPUT-FILE read-lines ;
-
-: parse-inputs ( str -- inputs ) 
-  "," split <reversed> [ string>number ] V{ } map-as
-;
-
-: parse-board-row ( str -- row )
-  R/ \d+/ all-matching-slices [ string>number <board-pos> ] map
-;
-
 :: mark-board ( board value -- )
  board [ 
    [| pos |
@@ -69,8 +59,15 @@ C: <bingo> bingo
   until
 ;
 
-:: input-bingo ( -- bingo )
-  input-rows :> rows
+: parse-board-row ( str -- row )
+  R/ \d+/ all-matching-slices [ string>number <board-pos> ] map
+;
+
+: parse-inputs ( str -- inputs ) 
+  "," split <reversed> [ string>number ] V{ } map-as
+;
+
+:: parse-bingo ( rows -- bingo )
   rows first parse-inputs :> inputs
   rows rest-slice 6 <groups>
   [
@@ -79,10 +76,6 @@ C: <bingo> bingo
   inputs boards <bingo> 
 ;
 
-: part1 ( -- score )
-input-bingo bingo-play-until-winner first
-;
-
-: part2 ( -- score )
-input-bingo bingo-play-until-last-winner first
-;
+INPUT: parse-bingo ;
+PART1: bingo-play-until-winner first ;
+PART2: bingo-play-until-last-winner first ;
