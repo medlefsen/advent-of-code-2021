@@ -12,13 +12,6 @@ IN: aoc.day06
 MEMO: test-fish ( -- fishes ) TEST-FILE read-fish ;
 MEMO: input-fish ( -- fishes ) INPUT-FILE read-fish ;
 
-:: process-fish ( fish -- fishes )
- fish 0 =  
- [ { 6 8 } ]
- [  fish 1 - 1array ]
- if
-;
-
 :: process-fishes ( fishes -- fishes )
   fishes [| age num |
     age 0 = [ 8 ] [ age 1 - ] if
