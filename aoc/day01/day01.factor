@@ -1,11 +1,9 @@
 USING: kernel math sequences math.parser grouping
 aoc.shared ;
 IN: aoc.day01
+INPUTS: input ;
 
-
-: load-input ( -- seq )
-  INPUT-FILE read-lines [ string>number ] map
-;
+: >numbers ( lines -- seq ) [ string>number ] map
 
 : count-increases ( seq -- incr )
   2 <clumps> [ first2 < ] count
@@ -15,6 +13,6 @@ IN: aoc.day01
   3 <clumps> [ sum ] map
 ;
 
-: part1 ( -- answer ) load-input count-increases ;
-: part2 ( -- answer ) load-input sum-windows count-increases ;
+: part1 ( -- answer ) input-lines >numbers count-increases ;
+: part2 ( -- answer ) input-lines >number sum-windows count-increases ;
   
