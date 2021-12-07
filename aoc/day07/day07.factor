@@ -21,10 +21,6 @@ MEMO: input-crabs ( -- seq ) INPUT-FILE read-crabs ;
 : lowest-linear-alignment-fuel ( crabs -- n )
  linear-alignment-options minmax drop
 ;
-! 1 2 3 4 5
-! 1 3 6 10 15
-! 1 1.5 2 2.5 3
-! 1^1 2^1.5 3^2 4^2.5 5^3 6^3.3 7^4
 
 :: exp-alignment-fuel ( pos crabs -- n )
   crabs [ pos - abs dup 2 / 1/2 + * ] map sum
