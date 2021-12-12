@@ -1,4 +1,4 @@
-USING: io.files io.pathnames io.encodings.utf8 splitting
+USING: kernel io.files io.pathnames io.encodings.utf8 splitting
 sequences parser fry words effects memoize lexer locals
 namespaces vocabs.parser ;
 IN: aoc.shared
@@ -16,14 +16,14 @@ IN: aoc.shared
   name create-word-in
   contents-word parser '[ _ execute( -- str ) string-lines @ ]
   { } { "input" } <effect>
-  define-memoized
+  define-declared
 ;
 
 :: define-part ( name input quot -- )
   name create-word-in
   input quot '[ _ execute( -- v ) @ ]
   { } { "result" } <effect>
-  define-memoized
+  define-declared
 ;
 
 SYNTAX: INPUT: [let
