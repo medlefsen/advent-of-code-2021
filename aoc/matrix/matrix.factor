@@ -95,6 +95,12 @@ M: matrix-iterator adj ( iter -- seq )
     [ leftup ] [ rightup ] [ leftdown ] [ rightdown ]
   } cleave>array sift
 ;
+: neigh ( iter -- seq )
+  {
+    [ left ] [ up ] [ down ] [ right ]
+  } cleave>array sift
+;
+
 
 INSTANCE: matrix-seq immutable-sequence
 
