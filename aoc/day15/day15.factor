@@ -12,12 +12,6 @@ TUPLE: search goal open min-cost ;
   H{ } clone <min-heap> clone search boa
 ;
 
-: dist ( from to -- n )
- [ get[ x y ] 2array ] bi@ v- vabs first2 +
-;
-
-: dist-to-goal ( iter search -- dist ) get[ goal ] dist ;
-
 : visited? ( iter -- ? ) get-ref visited>> ;
 : visited! ( iter -- ) get-ref t swap visited<< ;
 
