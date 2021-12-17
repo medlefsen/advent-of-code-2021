@@ -7,11 +7,6 @@ IN: aoc.day15
 TUPLE: pos risk visited cost heap-item ; final
 : <pos> ( risk -- pos ) f f f pos boa ;
 
-TUPLE: search goal open min-cost ;
-: <search> ( goal -- search )
-  H{ } clone <min-heap> clone search boa
-;
-
 : visited? ( iter -- ? ) get-ref visited>> ;
 : visited! ( iter -- ) get-ref t swap visited<< ;
 
@@ -27,32 +22,28 @@ TUPLE: search goal open min-cost ;
   heap-item get[ heap index ] 0 swap sift-down
 ;
 
-: search-push ( iter search -- )
-  over visited? [ 2drop ] [| iter search |
+: queue-push ( iter queue -- )
+  over visited? [ 2drop ] [| iter queue |
     iter get-ref get[ heap-item ] [
       update-heap-item
     ] [ 
-     iter iter get-cost search get[ min-cost ] heap-push*
+     iter iter get-cost queue heap-push*
      iter get-ref heap-item<<
     ] if*
   ] if
 ;
 
-:: search-neigh ( cur nei search -- )
-  cur get-cost nei get-risk + :> cost
-  cost nei closer? [
-    cost nei set-cost
-  ] when
-  nei search search-push
+: queue-pop ( queue -- iter )
+  heap-pop drop f over get-ref heap-item<<
 ;
 
-:: search-pop ( search -- iter )
-  search get[ min-cost ] heap-pop drop
-  f over get-ref heap-item<<
+:: update-cost ( cur nei -- )
+  cur get-cost nei get-risk + :> cost
+  cost nei closer? [ cost nei set-cost ] when
 ;
 
 :: dijkstra ( from to -- cost )
-  to <search> :> search
+  <min-heap> :> queue
   0 from set-cost
 
   from
@@ -60,9 +51,10 @@ TUPLE: search goal open min-cost ;
   [| cur |
     cur visited!
     cur neigh [| iter |
-      cur iter search search-neigh
+      cur iter update-cost
+      iter queue queue-push
     ] each
-    search search-pop
+    queue queue-pop
   ] until
   get-cost
 ; 
@@ -88,10 +80,6 @@ TUPLE: search goal open min-cost ;
     ] map
     unclip [ [ append ] 2map ] reduce
   ] map-concat
-;
-
-: show-matrix ( matrix -- str )
-  [ [ number>string ] map-concat CHAR: \n suffix ] map-concat
 ;
 
 INPUT: [ [ 48 - <pos> ] { } map-as ] map ;
