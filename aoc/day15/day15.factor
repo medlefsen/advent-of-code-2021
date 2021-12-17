@@ -1,7 +1,7 @@
 USING: aoc.shared aoc.matrix kernel splitting sequences locals
 accessors math sets heaps slots.syntax refs math.vectors arrays
 assocs sequences.extras combinators.short-circuit.smart
-math.parser heaps.private formatting ;
+math.parser heaps.private ;
 IN: aoc.day15
 
 TUPLE: pos risk visited cost heap-item ; final
@@ -18,10 +18,6 @@ TUPLE: search goal open min-cost ;
 : set-cost ( cost iter -- ) get-ref cost<< ;
 : get-cost ( iter -- cost ) get-ref get[ cost ] ;
 : get-risk ( iter -- risk ) get-ref get[ risk ] ;
-
-: update-cost ( cur nei -- )
-  [ get-cost ] dip [ + ] change-cost drop
-;
 
 : closer? ( cost iter -- ? ) get-cost [ < ] [ drop t ] if* ;
 
