@@ -4,12 +4,12 @@ assocs sequences.extras combinators.short-circuit.smart io ui
 curses math.parser heaps.private ;
 IN: aoc.day15
 
-TUPLE: score parent cost dist ;
-C: <score> score
+TUPLE: pos risk parent cost dist ; final
+: <pos> ( risk -- pos ) f f f pos boa ;
 
-TUPLE: search goal open min-cost scores ;
+TUPLE: search goal open min-cost ;
 : <search> ( goal -- search )
-  H{ } clone <min-heap> H{ } clone search boa
+  H{ } clone <min-heap> clone search boa
 ;
 
 : dist ( from to -- n )
@@ -18,21 +18,20 @@ TUPLE: search goal open min-cost scores ;
 
 : dist-to-goal ( iter search -- dist ) get[ goal ] dist ;
 
-: get-score ( iter search -- iter ) get[ scores ] at ;
+: get-score ( iter search -- score )
+  drop get-ref dup get[ cost ] [ drop f ] unless
+  ;
 
 :: set-score ( cost parent iter search -- ) 
-  iter search get-score
-  [ cost parent set[ cost parent ] drop ]
-  [
-    parent cost iter search dist-to-goal <score>
-    iter search get[ scores ] set-at
-  ]
-  if*
+  iter get-ref :> pos
+  pos cost parent set[ cost parent ] drop
+  pos [ [ iter search dist-to-goal ] unless* ] change-dist drop
+  ! pos iter set-ref
 ;
 
 :: node-cost ( cur nei search -- cost ) 
   cur search get-score get[ cost ]
-  nei get-ref
+  nei get-ref get[ risk ]
   +
 ;
 
@@ -102,12 +101,12 @@ TUPLE: search goal open min-cost scores ;
   bi
 ;
 
-: path-score ( path -- score ) [ get-ref ] map sum ;
+: path-score ( path -- score ) [ get-ref get[ risk ] ] map sum ;
 
 :: shift-matrix ( matrix n -- matrix )
   matrix [
     [ 
-      n + dup 9 > [ 9 - ] when
+      get[ risk ] n + dup 9 > [ 9 - ] when <pos>
     ] map
   ] map
 ;
@@ -125,6 +124,6 @@ TUPLE: search goal open min-cost scores ;
   [ [ number>string ] map-concat CHAR: \n suffix ] map-concat
 ;
 
-INPUT: [ [ 48 - ] { } map-as ] map ;
+INPUT: [ [ 48 - <pos> ] { } map-as ] map ;
 PART1: from-to a* path-score ;
 PART2: 5 expand-matrix from-to a* path-score ;
