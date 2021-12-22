@@ -89,11 +89,45 @@ M:: matrix-iterator leftdown ( iter -- iter )
 M:: matrix-iterator rightup ( iter -- iter )
   iter x>> 1 + iter y>> 1 - iter move
 ; 
+
 M: matrix-iterator adj ( iter -- seq )
   {
     [ left ] [ up ] [ down ] [ right ]
     [ leftup ] [ rightup ] [ leftdown ] [ rightdown ]
   } cleave>array sift
+;
+
+:: up-unsafe ( iter -- iter )
+  iter x>> iter y>> 1 - iter matrix>> <matrix-iter> 
+;
+:: down-unsafe ( iter -- iter )
+  iter x>> iter y>> 1 + iter matrix>> <matrix-iter>
+; 
+:: left-unsafe ( iter -- iter )
+  iter x>> 1 - iter y>> iter matrix>> <matrix-iter>
+; 
+:: right-unsafe ( iter -- iter )
+  iter x>> 1 + iter y>> iter matrix>> <matrix-iter>
+; 
+:: leftup-unsafe ( iter -- iter )
+  iter x>> 1 - iter y>> 1 - iter matrix>> <matrix-iter> 
+;
+:: rightdown-unsafe ( iter -- iter )
+  iter x>> 1 + iter y>> 1 + iter matrix>> <matrix-iter>
+; 
+:: leftdown-unsafe ( iter -- iter )
+  iter x>> 1 - iter y>> 1 + iter matrix>> <matrix-iter>
+; 
+:: rightup-unsafe ( iter -- iter )
+  iter x>> 1 + iter y>> 1 - iter matrix>> <matrix-iter>
+; 
+
+: adj-grid ( iter -- seq )
+  {
+    [ leftup-unsafe ] [ up-unsafe ] [ rightup-unsafe ]
+    [ left-unsafe ] [ ] [ right-unsafe ]
+    [ leftdown-unsafe ] [ down-unsafe ] [ rightdown-unsafe ]
+  } cleave>array
 ;
 : neigh ( iter -- seq )
   {
